@@ -27,7 +27,7 @@ from puzzles import views as puzzlesViews
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
-    url(r'^signup/$', accountsViews.signup_without_email, name="signup"),
+    url(r'^signup/$', accountsViews.signup, name="signup"),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', accountsViews.activate, name='activate'),
     url(r'^logout/$', authViews.LogoutView.as_view(), name='logout'),
     url(r'^login/$', authViews.LoginView.as_view(template_name='login.html'), name="login"),\
