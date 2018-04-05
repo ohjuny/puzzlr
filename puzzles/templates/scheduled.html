@@ -45,6 +45,7 @@
             <th scope="row">Title</th>
             <th scope="row">Scheduled</th>
         </tr>
+{% if puzzles.count > 0 %}
         {% for puzzle in puzzles %}
         <tr>
             <td>{{ puzzle.subject }}</td>
@@ -56,6 +57,12 @@
         {% endfor %}
     </tbody>
 </table>
+{% else %}
+</tbody>
+</table>
+There are currently no scheduled puzzles.
+{% endif %}
+
 
 {% endblock %}
 
