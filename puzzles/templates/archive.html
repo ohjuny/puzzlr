@@ -39,26 +39,30 @@
 <!-- Display Puzzles -->
 <h3>Archived Puzzles:</h3>
 <div class="row">
-    {% for puzzle in puzzles %}
-    <div class="col-md-4">
-        <a href="{% url 'puzzle' puzzleID=puzzle.id %}">
-            <div class="card tile-large mb-3">
-                <div class="card-header bg-success header details">
-                    {{ puzzle.subject }}
-                    <span class="align-right">Closed: {{ puzzle.end_date }}</span>
+{% if puzzles.count > 0 %}
+        {% for puzzle in puzzles %}
+        <div class="col-md-4">
+            <a href="{% url 'puzzle' puzzleID=puzzle.id %}">
+                <div class="card tile-large mb-3">
+                    <div class="card-header bg-success header details">
+                        {{ puzzle.subject }}
+                        <span class="align-right">Closed: {{ puzzle.end_date }}</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ puzzle.title }}</h5>
+                        <p class="card-text">{{ puzzle.question|truncatechars:150|linebreaks }}</p>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{ puzzle.title }}</h5>
-                    <p class="card-text">{{ puzzle.question|truncatechars:150|linebreaks }}</p>
-                </div>
-            </div>
-        </a>
+            </a>
+        </div>
+        {% if forloop.counter|divisibleby:3 %}
     </div>
-    {% if forloop.counter|divisibleby:3 %}
-</div>
-<div class="row">
-    {% endif %}
-    {% endfor %}
+    <div class="row">
+        {% endif %}
+        {% endfor %}
+{% else %}
+    There are currently no live puzzles.
+{% endif %}
 </div>
 
 {% endblock %}
