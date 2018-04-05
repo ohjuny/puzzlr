@@ -6,6 +6,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils import timezone
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+import HttpResponse
 
 from django.template.loader import render_to_string
 from django.shortcuts import render, redirect
@@ -21,6 +22,8 @@ from django.contrib import messages
 
 import re
 
+import logging
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 
