@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% load filter %}
+
+{% block head %}
+<title>Solution</title>
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<br>
+  <ul class="messages">
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissable {{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success!</strong> {{ message }}
+      </div>
+    {% endfor %}
+  </ul>
+{% else %}
+<br>
+{% endif %}
+
+<h1 class="uppercase">
+    {{ puzzle.subject }}
+    <span class="text-success"> PUZZLE</span>
+</h1>
+
+<div class="row">
+    <div class="col-lg-8 lead">
+        <a href="{% url 'puzzle' puzzleID=puzzle.id %}">
+            <div class="alert alert-success">
+                <h1 class="alert-heading">{{ puzzle.title }}</h1>
+
+                <p>{{ puzzle.question|linebreaks }}</p>
+                <hr>
+                    <p class="details">Points for correct answer: {{ puzzle.correct_points }}
+                    <span class="align-right">Posted: {{ puzzle.datetime }}</span></p>
+                
+                    <p class="details">Points for incorrect answer: {{ puzzle.incorrect_points }}
+                    {% if closed %}
+                    <span class="align-right">Closed: {{ puzzle.end_date }}</span></p>
+                    {% else %}
+                    <span class="align-right">Closes: {{ puzzle.end_date }}</span></p>
+                    {% endif %}
+                </span>
+
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-4">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Welcome To Solution!</h5>
+                    <p class="card-text">Use this opportunity to share how you solved the puzzle!</p>
+                    <p class="card-text">Puzzling is always more fun together :)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<h2>Solution</h2>
+<div class="card bg-light">
+    <div class="card-header subtitle">
+            <div class="triple-left">{{ solution.datetime }} by <a href="{% url 'profile' username=solution.user.username %}">{{ solution.user.username }}</a></div>
+            {% if user == solution.user or user.profile.teacher %}
+            <div class="triple-right">
+                <a href="{% url 'edit_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">edit</a>
+                &nbsp;&nbsp;
+                <a class="delete" href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a>
+            </div>
+            {% endif %}
+            <div class="triple-center points">
+                {% if user.username in up_votes %}
+                    <a class="up-clicked" id="up_vote">&uArr;</a>
+                {% else %}
+                    <a class="up-not-clicked" id="up_vote">&uArr;</a>
+                {% endif %}
+                &nbsp;&nbsp;
+                <a id="points">{{ solution.points }}</a>
+                &nbsp;&nbsp;
+                {% if user.username in down_votes %}
+                    <a class="down-clicked" id="down_vote">&dArr;</a>
+                {% else %}
+                    <a class="down-not-clicked" id="down_vote">&dArr;</a>
+                {% endif %}
+            </div>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ solution.title }}</h5>
+        <p class="card-text">{{ solution.content|linebreaks }}</p>
+    </div>
+</div>
+
+<br>
+<h2 id="heading">Comments<span class="align-right"><button class="btn btn-primary" id="show_add_comment">Add Comment</button></span></h2>
+
+<div class="hidden" id="add_comment">
+    <div class="card bg-light">
+        <div class="card-header subtitle">
+                by <a href="{% url 'profile' username=user.username %}">{{ user.username }}</a>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <h5 class="card-title">Title: {{ form.title|addcss:"form-control" }}</h5>
+                <p class="card-text">Content: {{ form.content|addcss:"form-control" }}</p>
+                <button type="submit" class="btn btn-primary ">Add</button>
+            </form>
+        </div>
+    </div>
+    <br>
+</div>
+
+{% if comments.count == 0 %}
+    There are no comments to this solution. <a href="#" id="comment_link">Be the first!</a>
+{% else %}
+    {% for comment in comments %}
+    <div class="card bg-light">
+        <div class="card-header subtitle">
+            <div class="triple-left">{{ comment.datetime }} by <a href="{% url 'profile' username=comment.user.username %}">{{ comment.user.username }}</a></div>
+            {% if user == comment.user or user.profile.teacher %}
+                <div class="triple-right">
+                    <a href="{% url 'edit_comment' puzzleID=solution.puzzle.id solutionID=solution.id commentID=comment.id %}">edit</a>
+                    &nbsp;&nbsp;
+                    <a class="delete" href="{% url 'delete_comment' puzzleID=solution.puzzle.id solutionID=solution.id commentID=comment.id %}">delete</a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ comment.title }}</h5>
+            <p class="card-text">{{ comment.content|linebreaks }}</p>
+        </div>
+    </div>
+    <br>
+    {% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready(function(){
+    $('#up_vote').on('click', function () {
+        $.ajax({
+            type: "GET",
+            url: "/ajax/upvote/",
+            data: {
+                'solutionID': {{ solution.id }}
+            },
+            success: function (data) {
+                $("#points").load(" #points");
+                $('#up_vote').toggleClass("up-not-clicked up-clicked");
+                $('#down_vote').removeClass();
+                $('#down_vote').addClass("down-not-clicked");
+            },
+        });
+    });
+    $('#down_vote').on('click', function () {
+        $.ajax({
+            type: "GET",
+            url: "/ajax/downvote/",
+            data: {
+                'solutionID': {{ solution.id }},
+            },
+            success: function (data) {
+                $("#points").load(" #points");
+                $('#down_vote').toggleClass("down-not-clicked down-clicked");
+                $('#up_vote').removeClass();
+                $('#up_vote').addClass("up-not-clicked");
+            },
+        });
+    });
+});
+  
+function add_comment (){
+    if ($("#add_comment").css('display') == 'none') {
+        $("#add_comment").css('display','inline')   
+    }
+    else {
+        $("#add_comment").css('display','none')  
+    }
+    $('html, body').animate({
+        scrollTop: $("#heading").offset().top
+    }, 300);
+}
+
+$("#show_add_comment").click(add_comment);
+$("#comment_link").click(add_comment);
+</script>
+{% endblock %}

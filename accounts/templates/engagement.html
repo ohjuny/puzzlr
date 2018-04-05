@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Engagement</title>
+{% endblock %}
+
+{% block content %}
+<br>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" href="#" id="solutions-tab">Solutions</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#" id="comments-tab">Comments</a>
+    </li>
+</ul>
+
+<br>
+<div id="solutions-content">
+    <h2><a href="{% url 'profile' username=target.username %}">{{ target.username }}</a>'s Solutions</h2>
+    {% if solutions.count == 0 %}
+        {{ target.username }} has not submitted any solutions.
+    {% else %}
+        {% for solution in solutions %}
+            --> <a href="{% url 'puzzle' puzzleID=solution.puzzle.id %}">{{ solution.puzzle.title }}</a>
+            <div class="card bg-light">
+                <div class="card-header subtitle">
+                        <div class="triple-left">{{ solution.datetime }} by <a href="{% url 'profile' username=solution.user.username %}">{{ solution.user.username }}</a></div>
+                        {% if user == solution.user or user.profile.teacher %}
+                        <div class="triple-right">
+                            <a href="{% url 'edit_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">edit</a>
+                            &nbsp;&nbsp;
+                            <a class="delete" href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a>
+                        </div>
+                        {% endif %}
+                        <div class="triple-center points">
+                            <a class="block-link" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">&uArr;</a>
+                            &nbsp;&nbsp;
+                            {{ solution.points }}
+                            &nbsp;&nbsp;
+                            <a class="block-link" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">&dArr;</a>
+                        </div>
+                </div>
+                <a class="block-link" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ solution.title }}</h5>
+                    <p class="card-text">{{ solution.content|linebreaks }}</p>
+                </div>
+                </a>
+            </div>
+            <br>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<div class="hidden" id="comments-content">
+    <h2><a href="{% url 'profile' username=target.username %}">{{ target.username }}</a>'s Comments</h2>
+    {% if comments.count == 0 %}
+        {{ target.username }} has not made any comments.
+    {% else %}
+        {% for comment in comments %}
+            --> <a href="{% url 'solution' puzzleID=comment.solution.puzzle.id solutionID=comment.solution.id %}">{{ comment.solution.title }}</a>
+            <div class="card bg-light">
+                <div class="card-header subtitle">
+                    <div class="triple-left">{{ comment.datetime }} by <a href="{% url 'profile' username=comment.user.username %}">{{ comment.user.username }}</a></div>
+                    {% if user == comment.user or user.profile.teacher %}
+                        <div class="triple-right">
+                            <a href="{% url 'edit_comment' puzzleID=comment.solution.puzzle.id solutionID=comment.solution.id commentID=comment.id %}">edit</a>
+                            &nbsp;&nbsp;
+                            <a class="delete" href="{% url 'delete_comment' puzzleID=comment.solution.puzzle.id solutionID=comment.solution.id commentID=comment.id %}">delete</a>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ comment.title }}</h5>
+                    <p class="card-text">{{ comment.content|linebreaks }}</p>
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $("#solutions-tab").click(function () {
+        $('#solutions-tab').removeClass()
+        $('#solutions-tab').addClass('nav-link')
+        $('#solutions-tab').addClass('active')
+        $('#comments-tab').removeClass()
+        $('#comments-tab').addClass('nav-link')
+        $('#solutions-content').show()
+        $('#comments-content').hide()
+    });
+
+    $("#comments-tab").click(function () {
+        $('#comments-tab').removeClass()
+        $('#comments-tab').addClass('nav-link')
+        $('#comments-tab').addClass('active')
+        $('#solutions-tab').removeClass()
+        $('#solutions-tab').addClass('nav-link')
+        $('#comments-content').show()
+        $('#solutions-content').hide()
+    });
+</script>
+{% endblock %}

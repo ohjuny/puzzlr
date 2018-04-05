@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Archive</title>
+{% endblock %}
+
+{% block content %}
+
+<!-- Search -->
+<br>
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <input type="text" class="form-control" id="search" placeholder="Search archived puzzles">
+    </div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="title_check" checked>
+            <label class="form-check-label" for="title_check">Title</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="question_check" checked>
+            <label class="form-check-label" for="question_check">Question</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="subject_check" checked>
+            <label class="form-check-label" for="subject_check">Subject</label>
+        </div>
+    </div>
+    <div class="col-sm-3"></div>
+</div>
+
+<!-- Search Results -->
+<br>
+<div id="search_results"></div>
+
+<!-- Display Puzzles -->
+<h3>Archived Puzzles:</h3>
+<div class="row">
+    {% for puzzle in puzzles %}
+    <div class="col-md-4">
+        <a href="{% url 'puzzle' puzzleID=puzzle.id %}">
+            <div class="card tile-large mb-3">
+                <div class="card-header bg-success header details">
+                    {{ puzzle.subject }}
+                    <span class="align-right">Closed: {{ puzzle.end_date }}</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ puzzle.title }}</h5>
+                    <p class="card-text">{{ puzzle.question|truncatechars:150|linebreaks }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% if forloop.counter|divisibleby:3 %}
+</div>
+<div class="row">
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        function search() {
+            var search_text = $('#search').val();
+            var title = document.getElementById('title_check').checked
+            var question = document.getElementById('question_check').checked
+            var subject = document.getElementById('subject_check').checked
+
+            $.ajax({
+                type: "GET",
+                url: "/ajax/searcharchive/",
+                data: {
+                    'search_text': search_text,
+                    'title': title,
+                    'question': question,
+                    'subject': subject,
+                },
+                success: function (data) {
+                    $('#search_results').html(data);
+                    // console.log('it worked');
+                },
+            });
+        }
+        $('#search').keyup(search);
+        $('.form-check-input').change(search);
+
+    });
+</script>
+{% endblock %}

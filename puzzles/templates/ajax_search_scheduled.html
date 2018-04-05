@@ -1,0 +1,23 @@
+{% if puzzles.count > 0 %}
+<h3>Search Results:</h3>
+<table class="table">
+    <tbody>
+        {% for puzzle in puzzles %}
+        <tr>
+            <td>{{ puzzle.subject }}</td>
+            <td>
+                <a href="{% url 'puzzle' puzzleID=puzzle.id %}">{{ puzzle.title }}</a>
+            </td>
+            <td>{{ puzzle.scheduled_date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<hr>
+<hr>
+{% elif search_len < 3 %}
+
+{% else %}
+No puzzles match the search
+<hr>
+{% endif %}

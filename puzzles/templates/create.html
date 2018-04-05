@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load filter %}
+
+{% block head %}
+<title>Create</title>
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<br>
+  <ul class="messages">
+    {% for message in messages %}
+    <div class="alert alert-danger alert-dismissable {{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Oh no!</strong> {{ message }}
+      </div>
+    {% endfor %}
+  </ul>
+{% else %}
+<br>
+{% endif %}
+
+<h1>Create a puzzle!</h1>
+
+<form method="post" class="needs-validation" novalidate>
+  {% csrf_token %}
+  <h1 class="uppercase">{{ form.subject }}
+    <span class="text-success"> PUZZLE</span>
+  </h1>
+  {{ form.subject.errors }}
+  <div class="row">
+    <div class="col-lg-8 lead">
+      <div class="alert alert-dismissible alert-success">
+        <h5>Title: {{ form.title|addcss:"form-control" }}</h5>
+        {{ form.title.errors }}
+
+        <h5>Question: </h5>
+        {{ form.question|addcss:"form-control" }} {{ form.question.errors }}
+
+        <h5>Answer: {{ form.answer|addcss:"form-control" }}</h5>
+        {{ form.answer.errors }}
+        <h5>Points for correct answer: {{ form.correct_points|addcss:"form-control" }}</h5>
+        {{ form.correct_points.errors }}
+        <h5>Points for incorrect answer: {{ form.incorrect_points|addcss:"form-control" }}</h5>
+        {{ form.incorrect_points.errors }}
+        <h5>(OPTIONAL) Scheduled Date: {{ form.scheduled_date|addcss:"form-control" }}</h5>
+        {{ form.scheduled_date.errors }}
+        <h5>End Date: {{ form.end_date|addcss:"form-control" }}</h5>
+        {{ form.end_date.errors }}
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="col-lg-12 ">
+        <div class="well bs-component ">
+
+          <div class="card bg-faded">
+            <div class="card-body">
+              <h5 class="card-title">Almost There</h5>
+              <p class="card-text">Remember to double check the puzzle details before creating. Note that you can edit or delete the puzzle after
+                it has been created. Click the button below to create the puzzle!</p>
+              <button type="submit " class="btn btn-primary ">Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

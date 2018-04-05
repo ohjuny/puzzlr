@@ -1,0 +1,85 @@
+a:hover {
+  text-decoration: none;
+}
+
+.asdftest {
+  color: #ff0000;
+}
+
+.tile-large {
+  color: #2a552a;
+  background-color: #d9ecdc;
+}
+
+.header {
+  font-size: 10;
+  color: white;
+}
+
+.center-tabs {
+  margin: 0 auto;
+  width: 220px;
+}
+
+.align-right {
+	float: right;
+}
+
+.hidden {
+  display:none;
+}
+
+.details {
+  font-size: 10px;
+}
+
+.subtitle {
+  font-size: 12px;
+}
+
+.delete {
+  /* Bootstrap "danger" */
+  /* https://stackoverflow.com/questions/47702879/bootstrap-4-hex-colors-for-rails-app */
+  color: #dc3545;
+}
+
+.triple-left {
+  float: left;
+}
+
+.triple-center {
+  margin: 0 auto;
+  width: 100px;
+}
+
+.triple-right {
+  float: right;
+}
+
+.points {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.up-not-clicked {
+  cursor: pointer;
+}
+
+.up-clicked {
+  cursor: pointer;
+  color: #28a745 !important;
+}
+
+.down-not-clicked {
+  cursor: pointer;
+}
+
+.down-clicked {
+  cursor: pointer;
+  color: #dc3545 !important;
+}
+
+.block-link, .block-link:hover {
+  color: black;
+  text-decoration: none;
+}

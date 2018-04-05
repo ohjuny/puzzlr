@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Submissions</title>
+{% endblock %}
+
+{% block content %}
+<br>
+<h2><a href="{% url 'profile' username=target.username %}">{{ target.username }}</a>'s Submissions</h2>
+
+{% if currentLoggedIn or leaderboard_public or user.profile.teacher %}
+<table class="table">
+    <tbody>
+        <tr>
+            <th scope="row">Time of Submission</th>
+            <th scope="row">Puzzle</th>
+            <th scope="row">Response</th>
+            <th scope="row">Answer</th>
+            <th scope="row">Result</th>
+            <th scope="row">Points Gained</th>
+        </tr>
+        {% for submission in submissions %}
+        <tr>
+            <td>{{ submission.datetime }}</td>
+            <td><a href="{% url 'puzzle' puzzleID=submission.puzzle.id %}">{{ submission.puzzle.title }}</a></td>
+            <td>{{ submission.userAnswer }}</td>
+            {% if submission.puzzle.end_date > timenow %}
+                <td>Puzzle still live</td>
+                <td>Puzzle still live</td>
+                <td>Puzzle still live</td>
+            {% else %}
+                <td>{{ submission.puzzle.answer }}</td>
+                {% if submission.correct %}
+                    <td><font color="green">Correct</font></td>
+                    <td>{{ submission.puzzle.correct_points }}</td>
+                {% else %}
+                    <td><font color="red">Incorrect</font></td>
+                    <td>{{ submission.puzzle.incorrect_points }}</td>
+                {% endif %}
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<table class="table">
+    <tbody>
+        <tr>
+            <th scope="row">Time of Submission</th>
+            <th scope="row">Puzzle</th>
+        </tr>
+        {% for submission in submissions %}
+        <tr>
+            <td>{{ submission.datetime }}</td>
+            <td><a href="{% url 'puzzle' puzzleID=submission.puzzle.id %}">{{ submission.puzzle.title }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+
+{% endblock %}

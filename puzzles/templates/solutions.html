@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load filter %}
+
+{% block head %}
+<title>Solutions</title>
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<br>
+  <ul class="messages">
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissable {{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success!</strong> {{ message }}
+    </div>
+    {% endfor %}
+  </ul>
+{% else %}
+<br>
+{% endif %}
+
+{% if scheduled %}
+<font color="red">SCHEDULED: {{ puzzle.scheduled_date }}</font>
+{% endif %}
+
+<h1 class="uppercase">
+    {{ puzzle.subject }}
+    <span class="text-success"> PUZZLE</span>
+</h1>
+<div class="row">
+    <div class="col-lg-8 lead">
+        <a href="{% url 'puzzle' puzzleID=puzzle.id %}">
+            <div class="alert alert-success">
+                <h1 class="alert-heading">{{ puzzle.title }}</h1>
+                <p>{{ puzzle.question|linebreaks }}</p>
+                <hr>
+                <p class="details">Points for correct answer: {{ puzzle.correct_points }}
+                    <span class="align-right">Posted: {{ puzzle.datetime }}</span>
+                </p>
+                <p class="details">Points for incorrect answer: {{ puzzle.incorrect_points }} {% if closed %}
+                    <span class="align-right">Closed: {{ puzzle.end_date }}</span>
+                </p>
+                {% else %}
+                <span class="align-right">Closes: {{ puzzle.end_date }}</span>
+                </p>
+                {% endif %}
+                </span>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-4">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Welcome To Solutions!</h5>
+                    <p class="card-text">Puzzling is about more than just getting the answer.</p>
+                    <p class="card-text">It's about the process.</p>
+                    <p class="card-text">So use this space to discuss how you got to your answer!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+{% if scheduled %}
+    Cannot add solution to a puzzle that is not live yet!
+{% elif attempted or closed %}
+    <h2 id="heading">Solutions
+        <span class="align-right">
+            <a class="btn btn-primary" href="{% url 'add_solution' puzzleID=puzzle.id %}" role="button">Add Solution</a>
+        </span>
+    </h2>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#" id="popular-tab">Popular</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" id="newest-tab">Newest</a>
+        </li>
+    </ul>
+    <br>
+    {% if solutions_popular.count == 0 or solutions_newest.count == 0 %}
+        There are no solutions on this puzzle. <a href="{% url 'add_solution' puzzleID=puzzle.id %}">Be the first!</a>
+    {% else %}
+        <div id="popular-content">
+            {% for solution in solutions_popular %}
+            <div class="card bg-light">
+                <div class="card-header subtitle">
+                    <div class="triple-left">{{ solution.datetime }} by
+                        <a href="{% url 'profile' username=solution.user.username %}">{{ solution.user.username }}</a>
+                    </div>
+                    {% if user == solution.user or user.profile.teacher %}
+                    <div class="triple-right">
+                        <a href="{% url 'edit_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">edit</a>
+                        &nbsp;&nbsp;
+                        <a class="delete" href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a>
+                    </div>
+                    {% endif %}
+                    <div class="triple-center points">
+                        <a class="block-link" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">&uArr;</a>
+                        &nbsp;&nbsp; {{ solution.points }} &nbsp;&nbsp;
+                        <a class="block-link" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">&dArr;</a>
+                    </div>
+                </div>
+                <a class="block-link" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ solution.title }}</h5>
+                        <p class="card-text">{{ solution.content|linebreaks }}</p>
+                    </div>
+                </a>
+            </div>
+            <br>
+            {% endfor %}
+        </div>
+        <div class="hidden" id="newest-content">
+            {% for solution in solutions_newest %}
+            <div class="card bg-light">
+                <div class="card-header subtitle">
+                    <div class="triple-left">{{ solution.datetime }} by
+                        <a href="{% url 'profile' username=solution.user.username %}">{{ solution.user.username }}</a>
+                    </div>
+                    {% if user == solution.user or user.profile.teacher %}
+                    <div class="triple-right">
+                        <a href="{% url 'edit_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">edit</a>
+                        &nbsp;&nbsp;
+                        <a class="delete" href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a>
+                    </div>
+                    {% endif %}
+                    <div class="triple-center points">
+                        <a class="block-link" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">&uArr;</a>
+                        &nbsp;&nbsp; {{ solution.points }} &nbsp;&nbsp;
+                        <a class="block-link" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">&dArr;</a>
+                    </div>
+                </div>
+                <a class="block-link" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ solution.title }}</h5>
+                        <p class="card-text">{{ solution.content|linebreaks }}</p>
+                    </div>
+                </a>
+            </div>
+            <br>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% else %}
+    You must <a href="{% url 'puzzle' puzzleID=puzzle.id %}">submit an answer</a> before you can submit a solution!
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $("#popular-tab").click(function () {
+        $('#popular-tab').removeClass()
+        $('#popular-tab').addClass('nav-link')
+        $('#popular-tab').addClass('active')
+        $('#newest-tab').removeClass()
+        $('#newest-tab').addClass('nav-link')
+        $('#popular-content').show()
+        $('#newest-content').hide()
+        $('html, body').animate({
+            scrollTop: $("#heading").offset().top
+        }, 300);
+    });
+
+    $("#newest-tab").click(function () {
+        $('#newest-tab').removeClass()
+        $('#newest-tab').addClass('nav-link')
+        $('#newest-tab').addClass('active')
+        $('#popular-tab').removeClass()
+        $('#popular-tab').addClass('nav-link')
+        $('#newest-content').show()
+        $('#popular-content').hide()
+        $('html, body').animate({
+            scrollTop: $("#heading").offset().top
+        }, 300);
+    });
+</script>
+{% endblock %}

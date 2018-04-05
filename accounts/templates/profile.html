@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Profile</title>
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+<br>
+  <ul class="messages">
+    {% for message in messages %}
+      <div class="alert alert-success alert-dismissable {{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success!</strong> {{ message }}
+      </div>
+    {% endfor %}
+  </ul>
+{% else %}
+<br>
+{% endif %}
+
+{% if currentLoggedIn %}
+<h1><center>hello <b>{{ target.first_name }}</b></center></h1>
+{% endif %}
+<h2><a href="{% url 'profile' username=target.username %}">{{ target.username }}</a>'s Profile
+    <span class="align-right">
+        <a class="btn btn-secondary" href="{% url 'submissions' username=target.username %}" role="button" >Submissions</a>
+        <a class="btn btn-secondary" href="{% url 'engagement' username=target.username %}" role="button" >Engagement</a>
+    </span></h2>
+
+<table class="table">
+<tbody>
+    <tr>
+        <th scope="row">Username</th>
+        <td>{{ target.username }}</td>
+    </tr>
+    <tr>
+        <th scope="row">Email</th>
+        <td>{{ target.email }}</td>
+    </tr>
+    <tr>
+        <th scope="row">First Name</th>
+        <td>{{ target.first_name }}</td>
+    </tr>
+    <tr>
+        <th scope="row">Last Name</th>
+        <td>{{ target.last_name }}</td>
+    </tr>
+    <tr>
+        <th scope="row">Teacher</th>
+        <td>{% if target.profile.teacher %}
+            Yes
+            {% else %}
+            No
+            {% endif %}</td>
+    </tr>
+    <tr>
+        <th scope="row">Year</th>
+        <td>{{ target.profile.year }}</td>
+    </tr>
+</tbody>
+</table>
+
+{% if user.is_authenticated and currentLoggedIn %}
+    <a class="align-right" href="{% url 'editProfile' username=user.username %}">edit</a>
+    <br>
+    <br>
+{% endif %}
+
+{% if currentLoggedIn or leaderboard_public or user.profile.teacher %}
+    <h2>Points:</h2>
+    <table class="table">
+    <tbody>
+        <tr>
+            <th scope="row">Total</th>
+            <th scope="row">Engagement</th>
+            {% for subject in subjects %}
+            <th scope="row">{{ subject }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for item in target.profile.points %}
+            <td>{{ item.1 }}</td>
+            {% endfor %}
+        </tr>
+    </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}

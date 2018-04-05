@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load filter %}
+
+{% block head %}
+<title>Puzzle</title>
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<br>
+<ul class="messages">
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissable {{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success!</strong> {{ message }}
+    </div>
+    {% endfor %}
+</ul>
+{% else %}
+<br>
+{% endif %}
+
+{% if scheduled %}
+<font color="red">SCHEDULED: {{ puzzle.scheduled_date }}</font>
+{% endif %}
+<h1 class="uppercase">
+    {{ puzzle.subject }}
+    <span class="text-success"> PUZZLE</span>
+</h1>
+
+<div class="row">
+    <div class="col-lg-8 lead">
+        <div class="alert alert-success">
+            <h1 class="alert-heading">{{ puzzle.title }}</h1>
+            <p>{{ puzzle.question|linebreaks }}</p>
+            <hr>
+            <p class="details">Points for correct answer: {{ puzzle.correct_points }}
+            <span class="align-right">Posted: {{ puzzle.datetime }}</span></p>
+        
+            <p class="details">Points for incorrect answer: {{ puzzle.incorrect_points }}
+            {% if closed %}
+            <span class="align-right">Closed: {{ puzzle.end_date }}</span></p>
+            {% else %}
+            <span class="align-right">Closes: {{ puzzle.end_date }}</span></p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    {% if closed %}
+                        <h5 class="card-title">Puzzle is closed</h5>
+                        
+                        <button type="submit" class="btn btn-primary" id="show_answer">Show Answer</button>
+                        
+                        <div class="hidden" id="answer">
+                            <h4>Answer: {{ puzzle.answer }}</h4>
+                        </div>
+                    {% elif attempted %}
+                        <p class="card-text">You have already attempted this puzzle.</p>
+                        <p class="card-text">Come back on <b>{{ puzzle.end_date }}</b> to see the answer!</p>
+                    {% else %}
+                        <form class="form-horizontal" method="post">
+                            {% csrf_token %}
+                            <h5 class="card-title">Submission</h5>
+                            <label for="text">Answer</label>
+                            {{ form.answer|addcss:"form-control" }}
+                            <small class="form-text text-muted">Submit your answer above, make sure you double check before submitting.</small>
+                            <br>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    {% endif %}
+            
+                </div>
+            </div>
+            {% if user.is_authenticated and user.profile.teacher %}
+                <p><a href="{% url 'editPuzzle' puzzleID=puzzle.id %}">edit</a>
+                <span class="align-right"><a href="{% url 'deletePuzzle' puzzleID=puzzle.id %}">delete</a></span></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<hr>
+<a href="{% url 'solutions' puzzleID=puzzle.id %}">View Solutions</a>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $("#show_answer").click(function(){
+        $("#show_answer").css('display', 'none')
+        $("#answer").css('display','inline')
+
+    })
+</script>
+{% endblock %}

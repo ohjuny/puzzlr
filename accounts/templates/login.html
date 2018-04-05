@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load filter %}
+
+{% block head %}
+<title>Log In</title>
+{% endblock %}
+
+{% block content %}
+<br>
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <div class="text-center">
+            <h1>Log In Page</h1>
+            Don't have an account? Sign up
+            <a href="{% url 'signup' %}">here</a>
+        </div>
+        <br>
+        <br>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.all.errors }}
+            <div class="form-group">
+                <label>Username</label>
+                {{ form.username|addcss:"form-control" }} {{ form.username.errors }}
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                {{ form.password|addcss:"form-control" }} {{ form.password.errors }}
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Log In</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-sm-3"></div>
+</div>
+{% endblock %}

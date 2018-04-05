@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load filter %}
+
+{% block head %}
+<title>Leaderboard</title>
+{% endblock %}
+
+{% block content %}
+<br>
+<!-- Ensures that only teachers can toggle leaderboard status. -->
+{% if user.is_authenticated and user.profile.teacher %}
+    <div class="text-center"><h2>
+    STATUS:
+    {% if leaderboard_public %}
+        Public
+    {% else %}
+        Teachers Only
+    {% endif %}
+    </h2>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Switch</button>
+    </form>
+</div>
+{% endif %}
+
+<table class="table"
+        data-toggle="table"
+        data-height=600
+        data-page-size="10"
+        data-pagination="true"
+        data-search="true">
+    <thead>
+        <tr>
+            <th data-sortable="true">Username</th>
+            <th data-sortable="true">Full Name</th>
+            <th data-sortable="true">Points</th>
+            <th data-sortable="true">Engagement</th>
+            {% for subject in subjects %}
+            <th data-sortable="true">{{ subject }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>
+                <a href="{% url 'profile' username=user.username %}">{{ user.username }}</a>
+            </td>
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            {% for item in user.profile.points %}
+            <td>{{ item.1 }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>    
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% if puzzles.count > 0 %}
+<h3>Search Results:</h3>
+{% for puzzle in puzzles %}
+<div class="row">
+    <div class="w-100">
+        <a href="{% url 'puzzle' puzzleID=puzzle.id %}">
+            <div class="card tile-large mb-3">
+                <div class="card-header header bg-success details">
+                    {{ puzzle.subject }}
+                    <span class="align-right">Closes: {{ puzzle.end_date }}</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ puzzle.title }}</h5>
+                    <p class="card-text">{{ puzzle.question|truncatechars:1000|linebreaks }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{% endfor %}
+<hr>
+{% elif search_len < 3 %}
+
+{% else %}
+No puzzles match the search
+<hr>
+{% endif %}

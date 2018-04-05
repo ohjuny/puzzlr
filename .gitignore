@@ -1,0 +1,6 @@
+.vscode
+.env
+*.sqlite3
+settings.py
+*.pyc
+.DS_Store
