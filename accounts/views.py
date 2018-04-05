@@ -102,7 +102,7 @@ def signup(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            mail_subject = 'Activate your blog account.'
+            mail_subject = 'Activate your puzzlr account.'
 
             # Sends email.
             user.email_user(mail_subject, message)
