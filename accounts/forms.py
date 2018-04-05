@@ -25,7 +25,7 @@ class UserForm(UserCreationForm):
     )
     
     year = forms.ModelChoiceField(
-        queryset= Year.objects.all().order_by('year'),
+        queryset= Year.objects.all().order_by('pk'),
         required = True
     )
 
