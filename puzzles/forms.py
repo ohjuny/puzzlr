@@ -55,6 +55,14 @@ class CreateForm(forms.ModelForm):
         incorrect_points = cleaned_data.get("incorrect_points")
         scheduled_date = cleaned_data.get("scheduled_date")
         end_date = cleaned_data.get("end_date")
+        # Ensures that correct_points is required.
+        if correct_points == None:
+            self._errors["correct_points"] = self.error_class(["This field is required."])
+            raise forms.ValidationError("This field is required.")
+        # Ensures that end_date is required.
+        if incorrect_points == None:
+            self._errors["incorrect_points"] = self.error_class(["This field is required."])
+            raise forms.ValidationError("This field is required.")
         # Ensures correct_points is higher than incorrect_points
         if correct_points < incorrect_points:
             self._errors["correct_points"] = self.error_class(["Correct points must be higher than incorrect points."])
@@ -135,6 +143,14 @@ class EditPuzzleForm(forms.ModelForm):
         incorrect_points = cleaned_data.get("incorrect_points")
         scheduled_date = cleaned_data.get("scheduled_date")
         end_date = cleaned_data.get("end_date")
+        # Ensures that correct_points is required.
+        if correct_points == None:
+            self._errors["correct_points"] = self.error_class(["This field is required."])
+            raise forms.ValidationError("This field is required.")
+        # Ensures that end_date is required.
+        if incorrect_points == None:
+            self._errors["incorrect_points"] = self.error_class(["This field is required."])
+            raise forms.ValidationError("This field is required.")
         # Ensures correct_points is higher than incorrect_points
         if correct_points < incorrect_points:
             self._errors["correct_points"] = self.error_class(["Correct points must be higher than incorrect points."])
