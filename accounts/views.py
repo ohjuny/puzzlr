@@ -107,7 +107,8 @@ def signup(request):
             # Sends email.
             user.email_user(mail_subject, message)
 
-            return HttpResponse('Please confirm your email address to complete the registration')
+            # return HttpResponse('Please confirm your email address to complete the registration')
+            return render(request, "signup_done.html")
         else:
             return render(request, "signup.html", {
                 'form': form,
@@ -130,9 +131,11 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return HttpResponse('Thank you for your email confirmation. Now you can login to your account.')
+        # return HttpResponse('Thank you for your email confirmation. Now you can login to your account.')
+        return render(request, "confirm_valid.html")
     else:
-        return HttpResponse('Activation link is invalid!')
+        # return HttpResponse('Activation link is invalid!')
+        return render(request, "confirm_invalid.html")
 
 # View for viewing user profiles.
 def profile(request, username=None):
