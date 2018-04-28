@@ -528,11 +528,11 @@ def search_puzzles(request):
         # Uses Django's Q object to dynamically build a query depending on which checkboxes are ticked.
         query = Q()
         if title:
-            query |= Q(title__contains=search_text)
+            query |= Q(title__icontains=search_text)
         if question:
-            query |= Q(question__contains=search_text)
+            query |= Q(question__icontains=search_text)
         if subject:
-            query |= Q(subject__subject_name__contains=search_text)
+            query |= Q(subject__subject_name__icontains=search_text)
 
         if not (title or question or subject):
             puzzles = []
@@ -562,11 +562,11 @@ def search_archive(request):
         # Uses Django's Q object to dynamically build a query depending on which checkboxes are ticked.
         query = Q()
         if title:
-            query |= Q(title__contains=search_text)
+            query |= Q(title__icontains=search_text)
         if question:
-            query |= Q(question__contains=search_text)
+            query |= Q(question__icontains=search_text)
         if subject:
-            query |= Q(subject__subject_name__contains=search_text)
+            query |= Q(subject__subject_name__icontains=search_text)
 
         if not (title or question or subject):
             puzzles = []
@@ -596,11 +596,11 @@ def search_scheduled(request):
         # Uses Django's Q object to dynamically build a query depending on which checkboxes are ticked.
         query = Q()
         if title:
-            query |= Q(title__contains=search_text)
+            query |= Q(title__icontains=search_text)
         if question:
-            query |= Q(question__contains=search_text)
+            query |= Q(question__icontains=search_text)
         if subject:
-            query |= Q(subject__subject_name__contains=search_text)
+            query |= Q(subject__subject_name__icontains=search_text)
 
         if not (title or question or subject):
             puzzles = []
