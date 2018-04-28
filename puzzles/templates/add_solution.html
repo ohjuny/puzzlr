@@ -52,7 +52,7 @@
 
 {% if scheduled %}
     Cannot submit solution to a puzzle that is not live yet!
-{% elif attempted or closed %}
+{% elif attempted or closed or request.user.profile.teacher %}
     <div class="card bg-light">
         <div class="card-header subtitle">
                 by <a href="{% url 'profile' username=user.username %}">{{ user.username }}</a>

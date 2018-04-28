@@ -357,7 +357,7 @@ def add_solution(request, puzzleID=None):
             closed = True
         attempted = Submission.objects.filter(user=request.user, puzzle=puzzle)
         # Ensures solution can only be added if user has submitted an answer or puzzle is archived.
-        if attempted or closed:
+        if attempted or closed or request.user.profile.teacher:
             scheduled = False
             if puzzle.scheduled_date > timezone.now():
                 if not request.user.is_authenticated() or not request.user.profile.teacher:
