@@ -67,7 +67,7 @@
 
 {% if scheduled %}
     Cannot add solution to a puzzle that is not live yet!
-{% elif attempted or closed %}
+{% elif attempted or closed or request.user.profile.teacher %}
     <h2 id="heading">Solutions
         <span class="align-right">
             <a class="btn btn-primary" href="{% url 'add_solution' puzzleID=puzzle.id %}" role="button">Add Solution</a>
