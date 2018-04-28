@@ -40,85 +40,93 @@ def leaderboard_status(request):
 # View for sign ups without email verification.
 # Very useful to have this view for sign ups during development and debugging.
 def signup_without_email(request):
-    if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user, Profile = form.save()
+    if request.user.is_authenticated:
+        return render(request, "no_access.html")
+    else:
+        if request.method == "POST":
+            form = UserForm(request.POST)
+            if form.is_valid():
+                user, Profile = form.save()
 
-            # Uses regular expressions to determine if email is student or teacher.
-            email = user.email
-            student = re.compile("^[A-Za-z]+[0-9][0-9][0-9][0-9]\@dubaicollege.org$")
-            teacher = re.compile("^[A-Za-z]+\.[A-Za-z]+\@dubaicollege.org$")
-            if student.match(email):
-                user.profile.teacher = False
-            elif teacher.match(email):
-                user.profile.teacher = True
-            
-            user.save()
-            user.profile.save()
-            login(request, user)
-            messages.success(request, 'Account created succesfully!')
-            return redirect("profile", user.username)
+                # Uses regular expressions to determine if email is student or teacher.
+                email = user.email
+                student = re.compile("^[A-Za-z]+[0-9][0-9][0-9][0-9]\@dubaicollege.org$")
+                teacher = re.compile("^[A-Za-z]+\.[A-Za-z]+\@dubaicollege.org$")
+                if student.match(email):
+                    user.profile.teacher = False
+                elif teacher.match(email):
+                    user.profile.teacher = True
+                
+                user.save()
+                user.profile.save()
+                login(request, user)
+                messages.success(request, 'Account created succesfully!')
+                return redirect("profile", user.username)
+            else:
+                messages.warning(request, 'There are some errors on the form.')
+                return render(request, "signup.html", {
+                    'form': form,
+                })    
+                
         else:
-            messages.warning(request, 'There are some errors on the form.')
+            form = UserForm()  
             return render(request, "signup.html", {
                 'form': form,
-            })    
-            
-    else:
-        form = UserForm()  
-        return render(request, "signup.html", {
-            'form': form,
-        })
+            })
 
 # View for sign ups with email verification.
 def signup(request):
-    if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user, Profile = form.save()
+    if request.user.is_authenticated:
+        return render(request, "no_access.html")
+    else:
+        if request.method == "POST":
+            form = UserForm(request.POST)
+            if form.is_valid():
+                user, Profile = form.save()
 
-            # Uses regular expressions to determine if email is student or teacher.
-            email = user.email
-            student = re.compile("^[A-Za-z]+[0-9][0-9][0-9][0-9]\@dubaicollege.org$")
-            teacher = re.compile("^[A-Za-z]+\.[A-Za-z]+\@dubaicollege.org$")
-            if student.match(email):
-                user.profile.teacher = False
-            elif teacher.match(email):
-                user.profile.teacher = True
-            
-            user.save()
-            user.profile.save()
+                # Uses regular expressions to determine if email is student or teacher.
+                email = user.email
+                student = re.compile("^[A-Za-z]+[0-9][0-9][0-9][0-9]\@dubaicollege.org$")
+                teacher = re.compile("^[A-Za-z]+\.[A-Za-z]+\@dubaicollege.org$")
+                if student.match(email):
+                    user.profile.teacher = False
+                elif teacher.match(email):
+                    user.profile.teacher = True
+                
+                user.save()
+                user.profile.save()
 
-            # Ensures user must verify email address before allowed to use account.
-            user.is_active=False
-            user.save()
+                # Ensures user must verify email address before allowed to use account.
+                user.is_active=False
+                user.save()
 
-            # Generates email.
-            current_site = get_current_site(request)
-            message = render_to_string('confirmation.html', {
-                'user':user, 
-                'domain':current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            })
-            mail_subject = 'Activate your puzzlr account.'
+                # Generates email.
+                current_site = get_current_site(request)
+                message = render_to_string('confirmation.html', {
+                    'user':user, 
+                    'domain':current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                })
+                mail_subject = 'Activate your puzzlr account.'
 
-            # Sends email.
-            user.email_user(mail_subject, message)
+                # Sends email.
+                user.email_user(mail_subject, message)
 
-            # return HttpResponse('Please confirm your email address to complete the registration')
-            return render(request, "signup_done.html")
+                messages.success(request, 'Account created succesfully!')
+                # return HttpResponse('Please confirm your email address to complete the registration')
+                return render(request, "signup_done.html")
+            else:
+                messages.warning(request, 'There are some errors on the form.')
+                return render(request, "signup.html", {
+                    'form': form,
+                })    
+                
         else:
+            form = UserForm()        
             return render(request, "signup.html", {
                 'form': form,
             })    
-            
-    else:
-        form = UserForm()        
-        return render(request, "signup.html", {
-            'form': form,
-        })    
 
 # View called when user clicks activation link sent in verification email.
 def activate(request, uidb64, token):
@@ -163,27 +171,27 @@ def profile(request, username=None):
 
 # View for editing user profiles.
 def editProfile(request, username=None):
-    if request.method == "POST":
-        user = request.user
-        form = EditProfileForm(request.POST)
-        if form.is_valid():
-            user.first_name = form.cleaned_data['first_name']
-            user.last_name = form.cleaned_data['last_name']
-            user.profile.year = form.cleaned_data['year']
-            user.save()
-            user.profile.save()
-            messages.success(request, 'Profile was updated successfully!')
-        return HttpResponseRedirect(reverse("profile", kwargs={'username': user.username}))
-    else:
+    # Ensures that only logged in users can edit profile.
+    if request.user.is_authenticated:
         # Exception handling to ensure program does not crash when given username that does not exist.
         try:
             target = User.objects.get(username=username)
         except User.DoesNotExist:
             return render(request, "no_user.html")
-        # Ensures that only logged in users can edit profile.
-        if request.user.is_authenticated:
-            # Ensures that users cannot edit other users' profiles.
-            if request.user.username == target.username:
+        # Ensures that users cannot edit other users' profiles.
+        if request.user.username == target.username:
+            if request.method == "POST":
+                user = request.user
+                form = EditProfileForm(request.POST)
+                if form.is_valid():
+                    user.first_name = form.cleaned_data['first_name']
+                    user.last_name = form.cleaned_data['last_name']
+                    user.profile.year = form.cleaned_data['year']
+                    user.save()
+                    user.profile.save()
+                    messages.success(request, 'Profile was updated successfully!')
+                return HttpResponseRedirect(reverse("profile", kwargs={'username': user.username}))
+            else:
                 form = EditProfileForm(initial={
                     'first_name': request.user.first_name,
                     'last_name': request.user.last_name,
@@ -192,10 +200,10 @@ def editProfile(request, username=None):
                 return render(request, "editProfile.html", {
                     "form": form,
                 })
-            else:
-                return render(request, "no_access.html")
         else:
-            return render(request, "signup.html")
+            return render(request, "no_access.html")
+    else:
+        return render(request, "signup.html")
 
 # View to track all solutions and comments made by a user.
 def engagement(request, username=None):

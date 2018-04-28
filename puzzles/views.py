@@ -242,7 +242,7 @@ def solutions(request, puzzleID=None):
         scheduled = False
         if puzzle.scheduled_date > timezone.now():
             if not request.user.is_authenticated() or not request.user.profile.teacher:
-                return render(request, "error.html")
+                return render(request, "no_page.html")
             scheduled = True
         closed = False
         if puzzle.end_date < timezone.now():
@@ -305,7 +305,7 @@ def solution(request, puzzleID=None, solutionID=None):
                 scheduled = False
                 if puzzle.scheduled_date > timezone.now():
                     if not request.user.is_authenticated() or not request.user.profile.teacher:
-                        return render(request, "error.html")
+                        return render(request, "no_page.html")
                     scheduled = True
                 comments = Comment.objects.filter(solution=solution).order_by('-datetime')
                 form = AddCommentForm()
@@ -361,7 +361,7 @@ def add_solution(request, puzzleID=None):
             scheduled = False
             if puzzle.scheduled_date > timezone.now():
                 if not request.user.is_authenticated() or not request.user.profile.teacher:
-                    return render(request, "error.html")
+                    return render(request, "no_page.html")
                 scheduled = True
             form = AddSolutionForm()
             return render(request, "add_solution.html", {
@@ -405,7 +405,7 @@ def edit_solution(request, puzzleID=None, solutionID=None):
                 scheduled = False
                 if puzzle.scheduled_date > timezone.now():
                     if not request.user.is_authenticated() or not request.user.profile.teacher:
-                        return render(request, "error.html")
+                        return render(request, "no_page.html")
                     scheduled = True
                 closed = False
                 if puzzle.end_date < timezone.now():
@@ -474,7 +474,7 @@ def edit_comment(request, puzzleID=None, solutionID=None, commentID=None):
                 scheduled = False
                 if puzzle.scheduled_date > timezone.now():
                     if not request.user.is_authenticated() or not request.user.profile.teacher:
-                        return render(request, "error.html")
+                        return render(request, "no_page.html")
                     scheduled = True
                 closed = False
                 if puzzle.end_date < timezone.now():
@@ -647,4 +647,4 @@ def down_vote(request):
 
 # View for an invalid URL.
 def error(request):
-    return render(request, 'error.html')
+    return render(request, 'no_page.html')
