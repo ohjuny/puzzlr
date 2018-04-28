@@ -30,10 +30,10 @@ urlpatterns = [
     url(r'^signup/$', accountsViews.signup, name="signup"),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', accountsViews.activate, name='activate'),
     url(r'^logout/$', authViews.LogoutView.as_view(), name='logout'),
-    url(r'^login/$', authViews.LoginView.as_view(template_name='login.html'), name="login"),\
+    url(r'^login/$', authViews.LoginView.as_view(template_name='login.html'), name="login"),
 
     url(r'^puzzle/(?P<puzzleID>.+)/solution/(?P<solutionID>.+)/edit/$', puzzlesViews.edit_solution, name="edit_solution"),
-    url(r'^puzzle/(?P<puzzleID>.+)/solution/(?P<solutionID>.+)/delete/$', puzzlesViews.delete_solution, name="delete_solution"),\
+    url(r'^puzzle/(?P<puzzleID>.+)/solution/(?P<solutionID>.+)/delete/$', puzzlesViews.delete_solution, name="delete_solution"),
     url(r'^puzzle/(?P<puzzleID>.+)/solution/(?P<solutionID>.+)/comment/(?P<commentID>.+)/edit$', puzzlesViews.edit_comment, name="edit_comment"),
     url(r'^puzzle/(?P<puzzleID>.+)/solution/(?P<solutionID>.+)/comment/(?P<commentID>.+)/delete$', puzzlesViews.delete_comment, name="delete_comment"),
     url(r'^puzzle/(?P<puzzleID>.+)/solution/(?P<solutionID>.+)/$', puzzlesViews.solution, name="solution"),

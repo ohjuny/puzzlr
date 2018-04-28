@@ -201,7 +201,7 @@ def scheduled(request):
         else:
             return render(request, "no_access.html")
     else:
-        return redirect('signup')
+        return render(request, "no_access.html")
 
 # View for achived puzzles.
 def archive(request):

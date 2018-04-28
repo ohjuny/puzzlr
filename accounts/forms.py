@@ -83,18 +83,6 @@ class EditProfileForm(forms.ModelForm):
         queryset= Year.objects.all().order_by('year'),
         required = True
     )
-
-    ### MUST FIX THIS PART
-    # I have to make sure that students can't just change to 'N/A' by editing their profile
-    # def clean(self):
-    #     cleaned_data = self.cleaned_data # individual field's clean methods have already been called
-    #     year = cleaned_data.get("year")
-
-    #     if (not self.teacher) and year.year == 'N/A':
-    #         self._errors["year"] = self.error_class(['Students cannot use N/A as year.'])
-    #         raise forms.ValidationError('Students cannot use N/A as year.')
-
-    #     return cleaned_data
     
     class Meta:
         model = User
