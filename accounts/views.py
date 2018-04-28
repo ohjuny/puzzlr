@@ -234,7 +234,7 @@ def leaderboard(request):
         leaderboard_public = not leaderboard_public
         return redirect(leaderboard)
 
-    if leaderboard_public or request.user.profile.teacher:
+    if leaderboard_public:
         subjects = list(Subject.objects.values('subject_name'))
         subjects = [i['subject_name'] for i in subjects]
         return render(request, "leaderboard.html", {
@@ -242,4 +242,12 @@ def leaderboard(request):
             "subjects": subjects,
         })
     else:
-        return render(request, "no_access.html")
+        if request.user.is_authenticated and request.user.profile.teacher:
+            subjects = list(Subject.objects.values('subject_name'))
+            subjects = [i['subject_name'] for i in subjects]
+            return render(request, "leaderboard.html", {
+                "users": users,
+                "subjects": subjects,
+            })
+        else:
+            return render(request, "no_access.html")
