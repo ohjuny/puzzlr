@@ -147,11 +147,6 @@ def editPuzzle(request, puzzleID=None):
                     scheduled_in_future = True
                 else:
                     scheduled_in_future = False
-                    
-                if puzzle.end_date > timezone.now():
-                    end_in_future = True
-                else:
-                    end_in_future = False
                 
                 form = EditPuzzleForm(initial={
                     'title': puzzle.title,
@@ -167,7 +162,6 @@ def editPuzzle(request, puzzleID=None):
                     "form": form,
                     "puzzle": puzzle,
                     "scheduled_in_future": scheduled_in_future,
-                    "end_in_future": end_in_future,
                 })
             else:
                 return render(request, "no_access.html")

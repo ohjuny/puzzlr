@@ -58,6 +58,14 @@ urlpatterns = [
     url(r'^ajax/searchscheduled/$', puzzlesViews.search_scheduled, name="search_scheduled"),
     url(r'^ajax/upvote/$', puzzlesViews.up_vote, name="up_vote"),
     url(r'^ajax/downvote/$', puzzlesViews.down_vote, name="down_vote"),
+
+    #Views for password reset
+    url(r'^password_reset/$', authViews.password_reset, name='password_reset'),
+    url(r'^password_reset/done/$', authViews.password_reset_done, name='password_reset_done'),
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        authViews.password_reset_confirm, name='password_reset_confirm'),
+    url(r'^reset/done/$', authViews.password_reset_complete, name='password_reset_complete'),
+
     # Intentional design decision to make landing page the page with all the live puzzles.
     # This is because the main purpose of the app is to encourage people to solve puzzles.
     url(r'^$', puzzlesViews.puzzles, name="puzzles"),

@@ -224,17 +224,16 @@ def engagement(request, username=None):
 def leaderboard(request):
     global leaderboard_public
 
-    # Note that for reasons described in accounts/forms.py, I implemented .points in two ways:
-    # using a dictionary and using a list of lists.
-    # That's why I have a commented out a line below which assumes .points is a dictionary.
-    users = sorted(User.objects.all(), key=lambda t: t.profile.points[0], reverse=True)
-    # users = sorted(User.objects.all(), key=lambda t: t.profile.points['total'], reverse=True)
-
     if request.method == "POST":
         leaderboard_public = not leaderboard_public
         return redirect(leaderboard)
 
     if leaderboard_public:
+        # Note that for reasons described in accounts/forms.py, I implemented .points in two ways:
+        # using a dictionary and using a list of lists.
+        # That's why I have a commented out a line below which assumes .points is a dictionary.
+        users = sorted(User.objects.all(), key=lambda t: t.profile.points[0], reverse=True)
+        # users = sorted(User.objects.all(), key=lambda t: t.profile.points['total'], reverse=True)
         subjects = list(Subject.objects.values('subject_name'))
         subjects = [i['subject_name'] for i in subjects]
         return render(request, "leaderboard.html", {
@@ -243,6 +242,7 @@ def leaderboard(request):
         })
     else:
         if request.user.is_authenticated and request.user.profile.teacher:
+            users = sorted(User.objects.all(), key=lambda t: t.profile.points[0], reverse=True)
             subjects = list(Subject.objects.values('subject_name'))
             subjects = [i['subject_name'] for i in subjects]
             return render(request, "leaderboard.html", {

@@ -43,8 +43,9 @@
                 {{ form.incorrect_points.errors }}
                 <h5>Posted: {{ puzzle.datetime }}</h5>
                 {% if scheduled_in_future %}
-                <h5>Scheduled Date: {{ form.scheduled_date|addcss:"form-control" }}</h5>
-                {{ form.scheduled_date.errors }} {% else %}
+                    <h5>Scheduled Date: {{ form.scheduled_date|addcss:"form-control" }}</h5>
+                    {{ form.scheduled_date.errors }}
+                {% else %}
                 <h5>Scheduled Date: {{ puzzle.scheduled_date }}</h5>
                 {% endif %}
                 <h5>End Date: {{ form.end_date|addcss:"form-control" }}</h5>

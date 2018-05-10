@@ -62,8 +62,10 @@
 </table>
 
 {% if user.is_authenticated and currentLoggedIn %}
-    <a class="align-right" href="{% url 'editProfile' username=user.username %}">edit</a>
-    <br>
+    <div>
+        <a href="{% url 'password_reset' %}">reset password</a>
+        <span class="align-right"><a href="{% url 'editProfile' username=user.username %}">edit</a></span>
+    </div>
     <br>
 {% endif %}
 
