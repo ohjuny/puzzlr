@@ -188,7 +188,7 @@ def scheduled(request):
     if request.user.is_authenticated:
         # Ensures user must be a teacher to view scheduled puzzles.
         if request.user.profile.teacher:
-            puzzles = Puzzle.objects.filter(scheduled_date__range=(timezone.now(), "2999-01-01"))
+            puzzles = Puzzle.objects.filter(scheduled_date__range=(timezone.now(), "2999-01-01")).order_by("scheduled_date")
             return render(request, "scheduled.html", {
                 'puzzles': puzzles,
             })

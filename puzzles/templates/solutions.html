@@ -96,7 +96,7 @@
                     <div class="triple-right">
                         <a href="{% url 'edit_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">edit</a>
                         &nbsp;&nbsp;
-                        <a class="delete" href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a>
+                        <a class="text-danger" href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a>
                     </div>
                     {% endif %}
                     <div class="triple-center points">

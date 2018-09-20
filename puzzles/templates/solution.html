@@ -70,7 +70,7 @@
             <div class="triple-right">
                 <a href="{% url 'edit_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">edit</a>
                 &nbsp;&nbsp;
-                <a class="delete" href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a>
+                <a class="text-danger" href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a>
             </div>
             {% endif %}
             <div class="triple-center points">
@@ -126,7 +126,7 @@
                 <div class="triple-right">
                     <a href="{% url 'edit_comment' puzzleID=solution.puzzle.id solutionID=solution.id commentID=comment.id %}">edit</a>
                     &nbsp;&nbsp;
-                    <a class="delete" href="{% url 'delete_comment' puzzleID=solution.puzzle.id solutionID=solution.id commentID=comment.id %}">delete</a>
+                    <a class="text-danger" href="{% url 'delete_comment' puzzleID=solution.puzzle.id solutionID=solution.id commentID=comment.id %}">delete</a>
                 </div>
             {% endif %}
         </div>
