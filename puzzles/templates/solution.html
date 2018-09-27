@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load filter %}
+{% load markdownify %}
 
 {% block head %}
 <title>Solution</title>
@@ -34,17 +35,18 @@
 
                 <p>{{ puzzle.question|linebreaks }}</p>
                 <hr>
-                    <p class="details">Points for correct answer: {{ puzzle.correct_points }}
-                    <span class="align-right">Posted: {{ puzzle.datetime }}</span></p>
+                <p class="details">Points for correct answer: {{ puzzle.correct_points }}
+                <span class="align-right">Posted: {{ puzzle.datetime }}</span></p>
+            
+                <p class="details">Points for incorrect answer: {{ puzzle.incorrect_points }}
+                {% if closed %}
+                <span class="align-right">Closed: {{ puzzle.end_date }}</span></p>
+                {% else %}
+                <span class="align-right">Closes: {{ puzzle.end_date }}</span></p>
+                {% endif %}
                 
-                    <p class="details">Points for incorrect answer: {{ puzzle.incorrect_points }}
-                    {% if closed %}
-                    <span class="align-right">Closed: {{ puzzle.end_date }}</span></p>
-                    {% else %}
-                    <span class="align-right">Closes: {{ puzzle.end_date }}</span></p>
-                    {% endif %}
-                </span>
-
+                <p class="details"><span class="align-right">(Note: All times are shown in UTC))</span></p>
+                <br>
             </div>
         </a>
     </div>
@@ -113,7 +115,7 @@
     </div>
     <div class="card-body">
         <h5 class="card-title">{{ solution.title }}</h5>
-        <p class="card-text">{{ solution.content|linebreaks }}</p>
+        <p class="card-text">{{ solution.content | markdown | safe }}</p>
     </div>
 </div>
 
@@ -176,7 +178,7 @@
         </div>
         <div class="card-body">
             <h5 class="card-title">{{ comment.title }}</h5>
-            <p class="card-text">{{ comment.content|linebreaks }}</p>
+            <p class="card-text">{{ comment.content | markdown | safe }}</p>
         </div>
     </div>
     <br>

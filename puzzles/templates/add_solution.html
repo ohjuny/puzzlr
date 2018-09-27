@@ -22,17 +22,18 @@
 
                 <p>{{ puzzle.question|linebreaks }}</p>
                 <hr>
-                    <p class="details">Points for correct answer: {{ puzzle.correct_points }}
-                    <span class="align-right">Posted: {{ puzzle.datetime }}</span></p>
-                
-                    <p class="details">Points for incorrect answer: {{ puzzle.incorrect_points }}
-                    {% if closed %}
-                    <span class="align-right">Closed: {{ puzzle.end_date }}</span></p>
-                    {% else %}
-                    <span class="align-right">Closes: {{ puzzle.end_date }}</span></p>
-                    {% endif %}
-                </span>
+                <p class="details">Points for correct answer: {{ puzzle.correct_points }}
+                <span class="align-right">Posted: {{ puzzle.datetime }}</span></p>
+            
+                <p class="details">Points for incorrect answer: {{ puzzle.incorrect_points }}
+                {% if closed %}
+                <span class="align-right">Closed: {{ puzzle.end_date }}</span></p>
+                {% else %}
+                <span class="align-right">Closes: {{ puzzle.end_date }}</span></p>
+                {% endif %}
 
+                <p class="details"><span class="align-right">(Note: All times are shown in UTC))</span></p>
+                <br>
             </div>
         </a>
     </div>
@@ -53,19 +54,54 @@
 {% if scheduled %}
     Cannot submit solution to a puzzle that is not live yet!
 {% elif attempted or closed or request.user.profile.teacher %}
-    <div class="card bg-light">
-        <div class="card-header subtitle">
-                by <a href="{% url 'profile' username=user.username %}">{{ user.username }}</a>
-        </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                <h5 class="card-title">Title: {{ form.title|addcss:"form-control" }}</h5>
-                <p class="card-text">Content: {{ form.content|addcss:"form-control" }}</p>
-                <button type="submit" class="btn btn-primary ">Submit Solution</button>
-            </form>
+<div class="row">
+    <div class="col-lg-8 lead">
+        <div class="card bg-light">
+            <div class="card-header subtitle">
+                    by <a href="{% url 'profile' username=user.username %}">{{ user.username }}</a>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <h5 class="card-title">Title: {{ form.title|addcss:"form-control" }}</h5>
+                    <p class="card-text">Content: {{ form.content|addcss:"form-control" }}</p>
+                    <button type="submit" class="btn btn-primary ">Submit Solution</button>
+                </form>
+            </div>
         </div>
     </div>
+    <div class="col-lg-4">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Format your solution!</h5>
+                    <p class="card-text">puzzlr now supports
+                        <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a>
+                        and
+                        <a href="https://help.github.com/articles/creating-and-highlighting-code-blocks/">fenced code blocks</a>
+                        . This means you can use syntax highlighting!
+                    </p>
+                    <p class="card-text">Example:</p>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <p class="card-text">
+                                Some text<br>
+                                ---<br>
+                                '''python<br>
+                                print('hello world')<br>
+                                '''<br>
+                                ---<br>
+                                Some text
+                            </p>
+                        </div>
+                    </div>
+                    <br>
+                    <p class="card-text">Try it youself!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% else %}
     You must <a href="{% url 'puzzle' puzzleID=puzzle.id %}">submit an answer</a> before you can engage in discussion!
 {% endif %}
