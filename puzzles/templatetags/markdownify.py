@@ -17,7 +17,8 @@ class HighlightRenderer(mistune.Renderer):
             return '\n<pre><code>%s</code></pre>\n' % \
                 mistune.escape(code)
 
-        formatter = HtmlFormatter(linenos='table')
+        # formatter = HtmlFormatter(linenos='table')
+        formatter = HtmlFormatter()
         return highlight(code, lexer, formatter)
 
 @register.filter
