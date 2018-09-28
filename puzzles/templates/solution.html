@@ -85,7 +85,10 @@
                         </button>
                         </div>
                         <div class="modal-body">
-                        Once you delete a solution, you lose it forever.
+                            Title: {{ solution.title }}<br>
+                            Author: {{ solution.user.username }}
+                            <br><br>
+                            Once you delete a solution, you lose it forever.
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -163,7 +166,10 @@
                             </button>
                             </div>
                             <div class="modal-body">
-                            Once you delete a comment, you lose it forever.
+                                Title: {{ comment.title }}<br>
+                                Author: {{ comment.user.username }}
+                                <br><br>
+                                Once you delete a comment, you lose it forever.
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

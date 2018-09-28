@@ -99,12 +99,12 @@
                     <div class="triple-right">
                         <a href="{% url 'edit_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">edit</a>
                         &nbsp;&nbsp;
-                        <!-- <a class="text-danger" href="#" data-toggle="modal" data-target="#deleteSolutionPopular">delete</a> -->
-                        <a class="text-danger" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a>
+                        <a class="text-danger" href="#" data-toggle="modal" data-target="#deleteSolutionPopular-{{ forloop.counter }}">delete</a>
+                        <!-- <a class="text-danger" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a> -->
                 
                         <!-- Modal -->
-                        <!-- <div class="modal fade" id="deleteSolutionPopular" tabindex="-1" role="dialog" aria-labelledby="deleteSolutionPopularLabel" aria-hidden="true"> -->
-                            <!-- <div class="modal-dialog" role="document">
+                        <div class="modal fade" id="deleteSolutionPopular-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="deleteSolutionPopularLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                     <h5 class="modal-title" id="deleteSolutionPopularLabel">Are you sure?</h5>
@@ -113,15 +113,18 @@
                                     </button>
                                     </div>
                                     <div class="modal-body">
-                                    Once you delete a solution, you lose it forever.
+                                        Title: {{ solution.title }}<br>
+                                        Author: {{ solution.user.username }}
+                                        <br><br>
+                                        Once you delete a solution, you lose it forever.
                                     </div>
                                     <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <a href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}" class="btn btn-danger">{{ solution.id }}: Delete</a>
+                                    <a href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}" class="btn btn-danger">Delete</a>
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
 
                     </div>
                     {% endif %}
@@ -152,11 +155,11 @@
                     <div class="triple-right">
                         <a href="{% url 'edit_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">edit</a>
                         &nbsp;&nbsp;
-                        <!-- <a class="text-danger" href="#" data-toggle="modal" data-target="#deleteSolutionNewest">delete</a> -->
-                        <a class="text-danger" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a>
+                        <a class="text-danger" href="#" data-toggle="modal" data-target="#deleteSolutionNewest-{{ forloop.counter }}">delete</a>
+                        <!-- <a class="text-danger" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">delete</a> -->
 
                         <!-- Modal -->
-                        <!-- <div class="modal fade" id="deleteSolutionNewest" tabindex="-1" role="dialog" aria-labelledby="deleteSolutionNewestLabel" aria-hidden="true">
+                        <div class="modal fade" id="deleteSolutionNewest-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="deleteSolutionNewestLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -166,15 +169,18 @@
                                     </button>
                                     </div>
                                     <div class="modal-body">
-                                    Once you delete a solution, you lose it forever.
+                                        Title: {{ solution.title }}<br>
+                                        Author: {{ solution.user.username }}
+                                        <br><br>
+                                        Once you delete a solution, you lose it forever.
                                     </div>
                                     <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <a href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}" class="btn btn-danger">{{ solution.id }}: Delete</a>
+                                    <a href="{% url 'delete_solution' puzzleID=solution.puzzle.id solutionID=solution.id %}" class="btn btn-danger">Delete</a>
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
 
                     </div>
                     {% endif %}
