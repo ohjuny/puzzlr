@@ -193,7 +193,7 @@
                 <a class="block-link" href="{% url 'solution' puzzleID=solution.puzzle.id solutionID=solution.id %}">
                     <div class="card-body">
                         <h5 class="card-title">{{ solution.title }}</h5>
-                        <p class="card-text">{{ solution.content | markdown | safe | truncatechars:1000 }}</p>
+                        <p class="card-text">{{ solution.content | markdown | safe }}</p>
                     </div>
                 </a>
             </div>
