@@ -16,7 +16,7 @@ class Subject(models.Model):
 
 # Definition of Puzzle object.
 class Puzzle(models.Model):
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=50)
     question = models.TextField()
     datetime = models.DateTimeField(
         default=timezone.now,

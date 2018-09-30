@@ -25,7 +25,7 @@ class Solution(models.Model):
         Puzzle,
         on_delete=models.CASCADE,
     )
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=50)
     content = models.TextField()
     up_votes = models.ManyToManyField(User, related_name='up_votes', blank=True)
     down_votes = models.ManyToManyField(User, related_name='down_votes', blank=True)
@@ -48,7 +48,7 @@ class Comment(models.Model):
         Solution,
         on_delete=models.CASCADE,
     )
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=50)
     content = models.TextField()
     datetime = models.DateTimeField(default=timezone.now, blank=True)
     

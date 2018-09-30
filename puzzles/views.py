@@ -279,10 +279,43 @@ def solution(request, puzzleID=None, solutionID=None):
                     'solutionID': solutionID,
                 }))
             else:
-                messages.warning(request, 'There are some errors on the form.')
-                return render(request, "solution.html", {
-                    "form": form,
-                })
+                # Exception handling to ensure that program does not crash if solution does not exist
+                try:
+                    solution = Solution.objects.get(id=solutionID)
+                except:
+                    return render(request, "no_solution.html")
+                puzzle = Puzzle.objects.get(id=puzzleID)
+                closed = False
+                if puzzle.end_date < timezone.now():
+                    closed = True
+                attempted = Submission.objects.filter(user=request.user, puzzle=puzzle)
+                # Ensures individual solution can only be viewed if user has submitted an answer or puzzle is archived.
+                if attempted or closed or request.user.profile.teacher:
+                    scheduled = False
+                    if puzzle.scheduled_date > timezone.now():
+                        if not request.user.is_authenticated() or not request.user.profile.teacher:
+                            return render(request, "no_page.html")
+                        scheduled = True
+                    comments = Comment.objects.filter(solution=solution).order_by('-datetime')
+                    # Important that I send up_votes and down_votes as a list of usernames so that Django Template Language
+                    # can quickly iterate over it without much unnecessary client-side processing.
+                    up_votes = [u.username for u in solution.up_votes.all()]
+                    down_votes = [u.username for u in solution.down_votes.all()]
+
+                    messages.warning(request, 'There are some errors on the form.')
+                    return render(request, 'solution.html', {
+                        "solution": solution,
+                        "puzzle": puzzle,
+                        "scheduled": scheduled,
+                        "closed": closed,
+                        "attempted": attempted,
+                        "comments": comments,
+                        "form": form,
+                        "up_votes": up_votes,
+                        "down_votes": down_votes,
+                    })
+                else:
+                    return render(request, "no_access.html")
         else:
             # Exception handling to ensure that program does not crash if solution does not exist
             try:
@@ -335,10 +368,34 @@ def add_solution(request, puzzleID=None):
             messages.success(request, 'Solution was created successfully!')
             return HttpResponseRedirect(reverse("solutions", kwargs={'puzzleID': puzzleID}))
         else:
-            messages.warning(request, 'There are some errors on the form.')
-            return render(request, "add_solution.html", {
-                "form": form,
-            })
+            # Exception handling to ensure program does not crash when given puzzle that does not exist.
+            try:
+                puzzle = Puzzle.objects.get(id=puzzleID)
+            except:
+                return render(request, "no_puzzle.html")
+            closed = False
+            if puzzle.end_date < timezone.now():
+                closed = True
+            attempted = Submission.objects.filter(user=request.user, puzzle=puzzle)
+            # Ensures solution can only be added if user has submitted an answer or puzzle is archived.
+            if attempted or closed or request.user.profile.teacher:
+                scheduled = False
+                if puzzle.scheduled_date > timezone.now():
+                    if not request.user.is_authenticated() or not request.user.profile.teacher:
+                        return render(request, "no_page.html")
+                    scheduled = True
+
+                messages.warning(request, 'There are some errors on the form.')
+                return render(request, "add_solution.html", {
+                    "puzzle": puzzle,
+                    "scheduled": scheduled,
+                    "closed": closed,
+                    "attempted": attempted,
+                    "form": form,
+                })
+            else:
+                return render(request, "no_access.html")
+
     # Ensures only logged in users can add solutions.
     if request.user.is_authenticated:
         # Exception handling to ensure program does not crash when given puzzle that does not exist.

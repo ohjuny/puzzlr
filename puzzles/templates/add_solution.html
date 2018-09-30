@@ -3,7 +3,19 @@
 
 {% block content %}
 
+{% if messages %}
 <br>
+  <ul class="messages">
+    {% for message in messages %}
+    <div class="alert alert-danger alert-dismissable {{ message.tags }}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Oh no!</strong> {{ message }}
+      </div>
+    {% endfor %}
+  </ul>
+{% else %}
+<br>
+{% endif %}
 
 {% if scheduled %}
 <font color="red">SCHEDULED: {{ puzzle.scheduled_date }}</font>
@@ -64,7 +76,9 @@
                 <form method="post">
                     {% csrf_token %}
                     <h5 class="card-title">Title: {{ form.title|addcss:"form-control" }}</h5>
+                    {{ form.title.errors }}
                     <p class="card-text">Content: {{ form.content|addcss:"form-control" }}</p>
+                    {{ form.content.errors }}
                     <button type="submit" class="btn btn-primary ">Submit Solution</button>
                 </form>
             </div>

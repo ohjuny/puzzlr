@@ -15,7 +15,7 @@ class CreateForm(forms.ModelForm):
         self.fields['scheduled_date'].widget.attrs['placeholder'] = 'YYYY-MM-DD HH:MM:SS'
         self.fields['end_date'].widget.attrs['placeholder'] = 'YYYY-MM-DD HH:MM:SS'
         
-    title = forms.CharField(max_length=30)
+    title = forms.CharField(max_length=50)
     question = forms.CharField(
         widget=forms.Textarea(attrs={
             "rows": 4,
@@ -103,7 +103,7 @@ class EditPuzzleForm(forms.ModelForm):
         self.fields['scheduled_date'].widget.attrs['placeholder'] = 'YYYY-MM-DD HH:MM:SS'
         self.fields['end_date'].widget.attrs['placeholder'] = 'YYYY-MM-DD HH:MM:SS'
         
-    title = forms.CharField(max_length=30)
+    title = forms.CharField(max_length=50)
     question = forms.CharField(
         widget=forms.Textarea(attrs={
             "rows": 4,
@@ -195,7 +195,7 @@ class AddSolutionForm(forms.ModelForm):
         self.fields['title'].widget.attrs['placeholder'] = 'Title'
         self.fields['content'].widget.attrs['placeholder'] = 'Content'
     
-    title = forms.CharField()
+    title = forms.CharField(max_length=50)
     content = forms.CharField(
         widget=forms.Textarea(attrs={
             "rows": 6,
@@ -208,7 +208,7 @@ class AddSolutionForm(forms.ModelForm):
 
 # Form to edit a solution.
 class EditSolutionForm(forms.ModelForm):
-    title = forms.CharField()
+    title = forms.CharField(max_length=50)
     content = forms.CharField(
         widget=forms.Textarea(attrs={
             "rows": 6,
@@ -227,7 +227,7 @@ class AddCommentForm(forms.ModelForm):
         self.fields['title'].widget.attrs['placeholder'] = 'Title'
         self.fields['content'].widget.attrs['placeholder'] = 'Content'
     
-    title = forms.CharField()
+    title = forms.CharField(max_length=50)
     content = forms.CharField(
         widget=forms.Textarea(attrs={
             "rows": 6,
@@ -240,7 +240,7 @@ class AddCommentForm(forms.ModelForm):
 
 # Form to edit a comment.
 class EditCommentForm(forms.ModelForm):
-    title = forms.CharField()
+    title = forms.CharField(max_length=50)
     content = forms.CharField(
         widget=forms.Textarea(attrs={
             "rows": 6,

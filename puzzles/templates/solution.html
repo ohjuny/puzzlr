@@ -134,7 +134,9 @@
             <form method="post">
                 {% csrf_token %}
                 <h5 class="card-title">Title: {{ form.title|addcss:"form-control" }}</h5>
+                {{ form.title.errors }}
                 <p class="card-text">Content: {{ form.content|addcss:"form-control" }}</p>
+                {{ form.content.errors }}
                 <button type="submit" class="btn btn-primary ">Add</button>
             </form>
         </div>
