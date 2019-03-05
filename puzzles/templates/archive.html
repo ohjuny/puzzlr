@@ -39,8 +39,8 @@
 <!-- Display Puzzles -->
 <h3>Archived Puzzles:</h3>
 <div class="row">
-{% if puzzles.count > 0 %}
-        {% for puzzle in puzzles %}
+{% if puzzles_list|length > 0 %}
+        {% for puzzle, total, correct in puzzles_list %}
         <div class="col-md-4">
             <a href="{% url 'puzzle' puzzleID=puzzle.id %}">
                 <div class="card tile-large mb-3">
@@ -49,8 +49,11 @@
                         <span class="align-right">Closed: {{ puzzle.end_date }}</span>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">{{ puzzle.title }}</h5>
+                        <h5 class="card-title">{{ puzzle.title }}{{ total }}{{ correct }}</h5>
                         <p class="card-text">{{ puzzle.question|truncatechars:150|linebreaks }}</p>
+                    </div>
+                    <div class="card-header header text-dark">
+                        {{ total }} attempt(s), {{ correct }} correct
                     </div>
                 </div>
             </a>

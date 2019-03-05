@@ -200,8 +200,17 @@ def scheduled(request):
 # View for achived puzzles.
 def archive(request):
     puzzles = Puzzle.objects.filter(end_date__range=("2011-01-01", timezone.now()))
+    puzzles_list = []
+    for puzzle in puzzles:
+        total = Submission.objects.filter(puzzle=puzzle)
+        correct = [sub for sub in total if sub.correct]
+        # total = len(total)
+        # correct = len(correct)
+        puzzles_list.append((puzzle, len(total), len(correct)))
     return render(request, "archive.html", {
-        'puzzles': puzzles,
+        # 'puzzles': puzzles,
+        'puzzles_list': puzzles_list,
+        # 'correct': correct
     })
 
 # View for tracking a user's submissions.

@@ -20,7 +20,8 @@ from django.contrib.auth import views as authViews
 from django.conf import settings
 from django.conf.urls.static import static
 
-# from home import views
+# import views from apps
+
 from accounts import views as accountsViews
 from puzzles import views as puzzlesViews
 
