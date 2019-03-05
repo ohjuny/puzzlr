@@ -200,6 +200,7 @@ def scheduled(request):
 # View for achived puzzles.
 def archive(request):
     puzzles = Puzzle.objects.filter(end_date__range=("2011-01-01", timezone.now()))
+    puzzles = puzzles.order_by("-end_date")
     puzzles_list = []
     for puzzle in puzzles:
         total = Submission.objects.filter(puzzle=puzzle)
